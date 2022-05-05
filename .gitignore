@@ -1,0 +1,9 @@
+# package directories
+/node_modules
+
+#DS Store
+/.DS_Store
+/views/.DS_Store
+
+# Config 
+/.env
