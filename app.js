@@ -118,21 +118,28 @@ app.get('/logout', (req, res) => {
 // Articles route
 app.route('/articles')
     .get((req, res) => {
-        res.render('articles');
+        if (req.session.user && req.cookies.user_sid) {
+            console.log(req.session.user)
+            console.log(req.cookies.user_sid)
+            res.render('articles');
+        } else {
+            res.redirect('/login');
+        }
     })
     .post((req, res) => {
-        Article.create({
-            title: req.body.title,
-            article: req.body.article
-        })
-            .then(user => {
-                req.session.user = user.dataValues;
-                res.redirect('/articles');
-                // })
-                // .catch(error => {
-                //     res.redirect('/signup');
-                // });
+        if (req.session.user && req.cookies.user_sid) {
+            Article.create({
+                title: req.body.title,
+                authorId: req.session.user.id,
+                article: req.body.article
             })
+                .then(_article => {
+                    res.redirect('/articles');
+                })
+        } else {
+            res.redirect('/login');
+        }
+
     });
 
 // Not Found Route
