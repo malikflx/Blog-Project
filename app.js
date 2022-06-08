@@ -99,10 +99,6 @@ app.get('/dashboard', (req, res) => {
     }
 })
 
-// app.get('/articles', (req, res) => {
-//     res.render('articles');
-// })
-
 // Logout Route
 app.get('/logout', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
@@ -115,13 +111,13 @@ app.get('/logout', (req, res) => {
     }
 });
 
-// Articles route
-app.route('/articles')
+// Create Articles route
+app.route('/createArticles')
     .get((req, res) => {
         if (req.session.user && req.cookies.user_sid) {
             console.log(req.session.user)
             console.log(req.cookies.user_sid)
-            res.render('articles');
+            res.render('createArticles');
         } else {
             res.redirect('/login');
         }
@@ -134,7 +130,7 @@ app.route('/articles')
                 article: req.body.article
             })
                 .then(_article => {
-                    res.redirect('/articles');
+                    res.redirect('/createArticles');
                 })
         } else {
             res.redirect('/login');
@@ -148,96 +144,3 @@ app.use(function (req, res, next) {
 });
 
 app.listen(app.get('port'), () => console.log(`Blog app started on port ${app.get('port')}`));
-
-
-
-
-
-
-
-
-
-// const mysql = require('mysql');
-// const db = require("./models");
-// const PORT = process.env.PORT || 3000;
-
-// app.use(express.urlencoded({ extended: true }))
-// app.use(express.json());
-
-// const apiRoutes = require('./routes/apiRoutes');
-// app.use('/api', apiRoutes);
-
-// db.sequelize.sync().then(() => {
-//     app.listen(PORT, () => {
-//         console.log(`listening on: http://localhost:${PORT}`);
-//     })
-// })
-
-// const databaseConnection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'Brooklyn15!',
-//     database: 'blog'
-// });
-
-// databaseConnection.connect(error => {
-//     if (error) throw error;
-//     console.log("MySQL Database Connected!")
-// });
-
-// databaseConnection.query('SELECT * FROM USERS', (error, rows) => {
-//     if (error) throw error;
-
-//     console.log('Data received from blog database:');
-//     console.log(rows);
-// })
-
-// import { User } from "./models/User";
-
-// console.log(User.User);
-// // Initialize app
-// const app = express();
-
-// // Load View Engine
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'pug');
-
-// // Home Route
-// app.get('/', (req, res) => {
-//     let articles = [
-//         {
-//             id: 1,
-//             title: 'First Article',
-//             author: 'Malik Felix',
-//             body: 'This is the first article.'
-//         },
-//         {
-//             id: 2,
-//             title: 'Second Article',
-//             author: 'Chris Hazen',
-//             body: 'This is the second article.'
-//         },
-//         {
-//             id: 3,
-//             title: 'Third Article',
-//             author: 'Devon Hartsfield',
-//             body: 'This is the third article.'
-//         }
-//     ];
-//     res.render('index', {
-//         title: 'Articles',
-//         articles: articles
-//     });
-// });
-
-// // Add Route
-// app.get('/articles/add', (req, res) => {
-//     res.render('add_article', {
-//         title: 'Add Article'
-//     })
-// })
-
-// // Start Express Server
-// app.listen(3000, () => {
-//     console.log('Express server running on port 3000...');
-// });
