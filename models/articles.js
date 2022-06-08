@@ -1,3 +1,6 @@
+// import { User } from "./user";
+const User = require('./user')
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -28,15 +31,31 @@ const Article = sequelize.define('Articles', {
         primaryKey: true,
         autoIncrement: true
     },
+    title: {
+        type: Sequelize.STRING,
+        unique: false,
+        allowNull: false
+    },
     article: {
         type: Sequelize.STRING,
         unique: false,
         allowNull: false
     }
+
+    // authorId: {
+    //     type: Sequelize.INTEGER,
+    //     allowNull: false,
+    // }
+    // title: {
+
+    // }
 });
 
+Article.belongsTo(User, { as: 'author' }); // author foreign key added to the Article table
+// User.hasMany(Article); 
 sequelize.sync()
     .then(() => console.log('Article table created if one did not exist'))
     .catch(error => console.log('An error has occured', error))
 
 module.exports = Article;
+

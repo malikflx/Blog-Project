@@ -99,6 +99,10 @@ app.get('/dashboard', (req, res) => {
     }
 })
 
+// app.get('/articles', (req, res) => {
+//     res.render('articles');
+// })
+
 // Logout Route
 app.get('/logout', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
@@ -110,6 +114,26 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     }
 });
+
+// Articles route
+app.route('/articles')
+    .get((req, res) => {
+        res.render('articles');
+    })
+    .post((req, res) => {
+        Article.create({
+            title: req.body.title,
+            article: req.body.article
+        })
+            .then(user => {
+                req.session.user = user.dataValues;
+                res.redirect('/articles');
+                // })
+                // .catch(error => {
+                //     res.redirect('/signup');
+                // });
+            })
+    });
 
 // Not Found Route
 app.use(function (req, res, next) {

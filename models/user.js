@@ -70,4 +70,4 @@ sequelize.sync()
 //     return Users;
 // }
 
-module.exports = User;
+module.exports = User;  
