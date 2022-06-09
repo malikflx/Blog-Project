@@ -1,3 +1,11 @@
 <div>
     <h1>Hi, Welcome to your Blog dashboard. You are a registered author!</h1>
 </div>
+
+<p>{{ title }} as {{emailAddress}}</p>
+
+<ul class="article-list">
+    {{#each articles}}
+    {{>article}}
+    {{/each}}
+</ul>

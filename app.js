@@ -10,6 +10,8 @@ const path = require('path');
 const app = express();
 app.set('port', 3000);
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")))
 app.use(cookieParser());
 app.use(session({
     key: 'user_sid', // user session ID
@@ -88,16 +90,29 @@ app.route('/login')
     });
 
 // Dashboard Route
-app.get('/dashboard', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        hbsContent.loggedin = true;
-        hbsContent.emailAddress = req.session.user.email;
-        hbsContent.title = "You're logged in";
-        res.render('index', hbsContent);
-    } else {
-        res.redirect('/login');
-    }
-})
+app.route('/dashboard')
+    .get((req, res) => {
+        if (req.session.user && req.cookies.user_sid) {
+            hbsContent.loggedin = true;
+            hbsContent.emailAddress = req.session.user.email;
+            hbsContent.title = "You're logged in";
+            Article.findAll().then(data => {
+                const articles = data.map(article => article.get({ plain: true }))
+                console.log(articles);
+                res.render('index', { ...hbsContent, articles });
+            })
+
+        } else {
+            res.redirect('/login');
+        }
+    })
+// .post((req, res) => {
+//     Article.findAll({
+//         where: {
+//             authorId: 6
+//         }
+//     })
+// })
 
 // Logout Route
 app.get('/logout', (req, res) => {
