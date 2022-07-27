@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-app.set('port', 3000);
+app.set('port', 5000);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")))
@@ -106,13 +106,6 @@ app.route('/dashboard')
             res.redirect('/login');
         }
     })
-// .post((req, res) => {
-//     Article.findAll({
-//         where: {
-//             authorId: 6
-//         }
-//     })
-// })
 
 // Logout Route
 app.get('/logout', (req, res) => {
@@ -145,13 +138,56 @@ app.route('/createArticles')
                 article: req.body.article
             })
                 .then(_article => {
-                    res.redirect('/createArticles');
+                    res.redirect('/createArticles'); // eventually redirect to specific article view
                 })
         } else {
             res.redirect('/login');
         }
 
     });
+
+// Author articles
+app.route('/author')
+    .get((req, res) => {
+        if (req.session.user && req.cookies.user_sid) {
+            hbsContent.loggedin = true;
+            hbsContent.emailAddress = req.session.user.email;
+            hbsContent.title = "You're logged in";
+            Article.findAll({
+                where: {
+                    authorId: req.session.user.id
+                }
+            }).then(data => {
+                const articles = data.map(article => article.get({ plain: true }))
+                console.log(articles);
+                res.render('author', { ...hbsContent, articles });
+            })
+
+        } else {
+            res.redirect('/login');
+        }
+    })
+
+// app.get('/author', (req, res) => {
+//     if (req.session.user && req.cookies.user_sid) {
+//         hbsContent.loggedin = true;
+//         hbsContent.emailAddress = req.session.user.email;
+//         hbsContent.title = "You're logged in";
+//         Article.findAll({
+//             // const articles = data.map(article => article.get({ plain: true }))
+//             where: {
+//                 authordId: 6
+//             }
+//         }).then(data => {
+//             const articles = data.map(article => article.get({ plain: true }))
+//             console.log(articles);
+//             res.render('author', { ...hbsContent, articles })
+//         })
+//     } else {
+//         res.redirect('/login')
+//     }
+
+// })
 
 // Not Found Route
 app.use(function (req, res, next) {
